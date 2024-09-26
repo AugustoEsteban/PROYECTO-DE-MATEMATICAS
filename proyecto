@@ -1,0 +1,71 @@
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Facultad Guia',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: FacultadMap(),
+    );
+  }
+}
+
+class FacultadMap extends StatefulWidget {
+  const FacultadMap({super.key});
+
+  @override
+  _FacultadMapState createState() => _FacultadMapState();
+}
+
+class _FacultadMapState extends State<FacultadMap> {
+  late GoogleMapController mapController;
+
+  // Inicializa la ubicación del mapa (la facultad)
+  final LatLng _facultadLocation = const LatLng(28.702718296662933, -106.13900796281747); // Escribir la ubicación de tu facultad.
+
+  // Lista de marcadores (lugares clave en la facultad)
+  final Set<Marker> _markers = {
+    const Marker(
+      markerId: MarkerId('Arbol de estructuras'),
+      position: LatLng(28.703823545698402, -106.13930118404562), // Escribir coordenadas
+      infoWindow: InfoWindow(title: 'Arbol de estructuras'),
+    ),
+    const Marker(
+      markerId: MarkerId('Otra referencia por ejemplo laboratorios'),
+      position: LatLng(28.70333734658719, -106.14050846447306), // Escribir coordenadas de esa referencia
+      infoWindow: InfoWindow(title: 'Titulo de esa referencia'),
+    ),
+    // Agrega más marcadores según los puntos importantes de la facultad
+  };
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Guía de la Facultad'),
+      ),
+      body: GoogleMap(
+        onMapCreated: _onMapCreated,
+        initialCameraPosition: CameraPosition(
+          target: _facultadLocation,
+          zoom: 15.0,
+        ),
+        markers: _markers,
+      ),
+    );
+  }
+}
